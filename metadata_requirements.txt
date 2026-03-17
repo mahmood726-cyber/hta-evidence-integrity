@@ -1,0 +1,6 @@
+Package	Version
+data.table	1.18.0
+metafor	4.8.0
+caret	7.0.1
+pROC	1.19.0.1
+dplyr	1.1.4
