@@ -111,5 +111,93 @@
         }
     });
 </script>
+<script>
+window.__webrValidationConfig = {
+    appName: 'HTA Evidence Integrity Suite',
+    intro: 'Checks the category distribution, rare-disease exception rule, and grade-to-action examples shown in the worklist.',
+    async ready(h) {
+        await h.waitFor(() => !!window.Chart && !!Chart.getChart(document.getElementById('qualityChart')));
+    },
+    tests: [
+        {
+            name: 'GRADE distribution sums to a full 100% share',
+            collect() {
+                const chart = Chart.getChart(document.getElementById('qualityChart'));
+                return { values: chart.data.datasets[0].data.map(Number) };
+            },
+            r(payload) {
+                return `
+values <- c(${payload.values.join(', ')})
+if (abs(sum(values) - 100) < 1e-8) {
+  "PASS|The doughnut chart sums to a complete 100% category share."
+} else {
+  paste0("FAIL|The doughnut chart sums to ", sum(values), " instead of 100.")
+}`.trim();
+            }
+        },
+        {
+            name: 'Rare-disease exception rows stay below the N < 250 guardrail',
+            collect() {
+                const rows = Array.from(document.querySelectorAll('#riskTable tbody tr')).map((row) => {
+                    const cells = row.querySelectorAll('td');
+                    return {
+                        n: Number(cells[1].textContent.trim()),
+                        grade: cells[3].textContent.trim(),
+                    };
+                });
+                return {
+                    nValues: rows.map((row) => row.n),
+                    grades: rows.map((row) => row.grade),
+                };
+            },
+            r(payload, h) {
+                return `
+n_values <- c(${payload.nValues.join(', ')})
+grades <- ${h.rVector(payload.grades)}
+exception_idx <- grepl("EXC", grades, fixed = TRUE)
+if (!any(exception_idx)) {
+  "FAIL|No exception-tagged rows were found in the worklist."
+} else if (all(n_values[exception_idx] < 250)) {
+  "PASS|Every exception-tagged row remains below the rare-disease N < 250 guardrail."
+} else {
+  paste0("FAIL|Exception-tagged rows have sample sizes ", paste(n_values[exception_idx], collapse = ", "), ".")
+}`.trim();
+            }
+        },
+        {
+            name: 'Displayed actions remain aligned with the example GRADE labels',
+            collect() {
+                const rows = Array.from(document.querySelectorAll('#riskTable tbody tr')).map((row) => {
+                    const cells = row.querySelectorAll('td');
+                    return {
+                        grade: cells[3].textContent.trim(),
+                        action: cells[4].textContent.trim(),
+                    };
+                });
+                return {
+                    grades: rows.map((row) => row.grade),
+                    actions: rows.map((row) => row.action),
+                };
+            },
+            r(payload, h) {
+                return `
+grades <- ${h.rVector(payload.grades)}
+actions <- ${h.rVector(payload.actions)}
+checks <- c(
+  all(actions[grades == "VERY LOW"] == "Reject/Re-audit"),
+  all(actions[grades == "HIGH"] == "Full Reimbursement"),
+  all(actions[grades == "LOW"] == "Managed Access")
+)
+if (all(checks)) {
+  "PASS|The worklist actions are still consistent with the example HIGH / LOW / VERY LOW labels."
+} else {
+  "FAIL|One or more example actions no longer match the GRADE labels shown in the worklist."
+}`.trim();
+            }
+        }
+    ]
+};
+</script>
+<script src="../_shared/webr-validation.js"></script>
 </body>
 </html>

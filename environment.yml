@@ -1,0 +1,16 @@
+name: hta-integrity-reviewer
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - r-base=4.3
+  - r-metafor
+  - r-data.table
+  - r-jsonlite
+  - r-testthat
+  - pip:
+      - numpy>=2.0
+      - pandas>=2.0
+      - pytest>=8.0
+      - playwright>=1.49
