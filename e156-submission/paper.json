@@ -1,0 +1,96 @@
+{
+  "title": "Evidence Integrity Suite for Multi-Layered Health Technology Assessment of Cochrane Reviews",
+  "slug": "hta-evidence-integrity",
+  "author": "Mahmood Ahmad",
+  "date": "2026-03-26",
+  "body": "Can automated information adequacy, fragility, and publication bias assessment improve health technology assessment decision-making across hundreds of Cochrane reviews? The Evidence Integrity Suite analyzed 501 Cochrane systematic reviews from the Pairwise70 dataset, encompassing 4,424 meta-analyses across 17 clinical domains with 43,000 individual studies. The pipeline integrates an Information Adequacy Index using heterogeneity-adjusted optimal information size, leave-one-out fragility classification, and dual-pronged bias correction with a rare-disease guardrail for small populations. Only 36.4 percent of 492 meta-analyses met adequate information thresholds, while 26.1 percent exhibited directional fragility and 29.5 percent showed sign reversals under bias correction. Simulation across eight scenarios confirmed that Hartung-Knapp-Sidik-Jonkman achieved the best coverage at 89.0 percent overall, while all methods severely undercovered under high heterogeneity with publication bias. The integrated triage dashboard maps these quantitative signals to GRADE-aligned HTA decision categories for transparent evidence prioritization. However, a limitation is that the evidence decay prediction model achieved only moderate discrimination with cross-validated AUC of 0.688.",
+  "word_count": 156,
+  "sentence_count": 7,
+  "sentences": [
+    {
+      "role": "Question",
+      "text": "Can automated information adequacy, fragility, and publication bias assessment improve health technology assessment decision-making across hundreds of Cochrane reviews?"
+    },
+    {
+      "role": "Dataset",
+      "text": "The Evidence Integrity Suite analyzed 501 Cochrane systematic reviews from the Pairwise70 dataset, encompassing 4,424 meta-analyses across 17 clinical domains with 43,000 individual studies."
+    },
+    {
+      "role": "Method",
+      "text": "The pipeline integrates an Information Adequacy Index using heterogeneity-adjusted optimal information size, leave-one-out fragility classification, and dual-pronged bias correction with a rare-disease guardrail for small populations."
+    },
+    {
+      "role": "Primary result",
+      "text": "Only 36.4 percent of 492 meta-analyses met adequate information thresholds, while 26.1 percent exhibited directional fragility and 29.5 percent showed sign reversals under bias correction."
+    },
+    {
+      "role": "Robustness",
+      "text": "Simulation across eight scenarios confirmed that Hartung-Knapp-Sidik-Jonkman achieved the best coverage at 89.0 percent overall, while all methods severely undercovered under high heterogeneity with publication bias."
+    },
+    {
+      "role": "Interpretation",
+      "text": "The integrated triage dashboard maps these quantitative signals to GRADE-aligned HTA decision categories for transparent evidence prioritization."
+    },
+    {
+      "role": "Boundary",
+      "text": "However, a limitation is that the evidence decay prediction model achieved only moderate discrimination with cross-validated AUC of 0.688."
+    }
+  ],
+  "notes": {
+    "app": "HTA Evidence Integrity Suite v2.1",
+    "data": "Pairwise70 Cochrane dataset (501 reviews, 4,424 meta-analyses)",
+    "code": "https://github.com/mahmood726-cyber/hta-evidence-integrity",
+    "doi": "",
+    "version": "2.1",
+    "date": "2026-03-26",
+    "validation": "DRAFT"
+  },
+  "type": "methods",
+  "primary_estimand": "Information Adequacy Index",
+  "validation": {
+    "status": "fail",
+    "checks": [
+      {
+        "name": "single paragraph",
+        "ok": true,
+        "detail": "Body must not contain blank-line paragraph breaks."
+      },
+      {
+        "name": "sentence count",
+        "ok": true,
+        "detail": "Found 7 sentences."
+      },
+      {
+        "name": "word count",
+        "ok": true,
+        "detail": "Found 156 words."
+      },
+      {
+        "name": "no headings",
+        "ok": true,
+        "detail": "No markdown headings allowed in body."
+      },
+      {
+        "name": "no links",
+        "ok": true,
+        "detail": "No links or DOI links allowed in body."
+      },
+      {
+        "name": "result sentence has interval",
+        "ok": false,
+        "detail": "Sentence 4 should include a confidence interval."
+      },
+      {
+        "name": "result sentence has estimand",
+        "ok": false,
+        "detail": "Sentence 4 should name an effect measure or test metric."
+      },
+      {
+        "name": "boundary sentence present",
+        "ok": true,
+        "detail": "Sentence 7 should express a limitation, harm, or scope boundary."
+      }
+    ]
+  },
+  "schema": "e156-v0.2"
+}
