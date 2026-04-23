@@ -24,7 +24,7 @@
 ### To View Results
 ```r
 library(data.table)
-mafi <- fread("C:/Users/user/OneDrive - NHS/Documents/Pairwise70/analysis/output/MAFI_all_variants.csv")
+mafi <- fread("<pairwise70-root>/analysis/output/MAFI_all_variants.csv")
 summary(mafi$MAFI_5comp)
 table(mafi$MAFI_class)
 ```
@@ -32,12 +32,12 @@ table(mafi$MAFI_class)
 ### To Use Web Calculator
 Open in browser:
 ```
-C:/Users/user/OneDrive - NHS/Documents/Pairwise70/MAFI-Calculator-Complete.html
+<pairwise70-root>/MAFI-Calculator-Complete.html
 ```
 
 ### To Run Selenium Tests
 ```bash
-python C:/Users/user/mafi_functional_test.py
+python <user-home>/mafi_functional_test.py
 ```
 
 ---
@@ -81,9 +81,9 @@ Classification:
 
 | Script | Purpose |
 |--------|---------|
-| `C:/Users/user/mafi_selenium_test.py` | Basic Selenium test |
-| `C:/Users/user/mafi_detailed_test.py` | Detailed test (older) |
-| `C:/Users/user/mafi_functional_test.py` | Comprehensive test (100% pass) |
+| `<user-home>/mafi_selenium_test.py` | Basic Selenium test |
+| `<user-home>/mafi_detailed_test.py` | Detailed test (older) |
+| `<user-home>/mafi_functional_test.py` | Comprehensive test (100% pass) |
 
 ---
 

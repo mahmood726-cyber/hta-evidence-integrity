@@ -6,7 +6,7 @@ PAIRWISE70_ROOT <- Sys.getenv("PAIRWISE70_ROOT", unset = "")
 if (PAIRWISE70_ROOT == "") {
   candidates <- c(
     file.path(dirname(getwd()), "Pairwise70"),
-    normalizePath("C:/Users/user/OneDrive - NHS/Documents/Pairwise70", mustWork = FALSE),
+    normalizePath("C:/Users/user/OneDrive - NHS/Documents/Pairwise70", mustWork = FALSE),  # sentinel:skip-line P0-hardcoded-local-path  (dev-machine fallback; honours PAIRWISE70_ROOT env var above)
     normalizePath("~/Pairwise70", mustWork = FALSE)
   )
   found <- candidates[dir.exists(candidates)]

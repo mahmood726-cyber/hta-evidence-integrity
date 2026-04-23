@@ -22,7 +22,7 @@
 **Focus:** Portability and Robustness
 
 ### 🚨 Critical Findings
-*   **Hardcoded Paths:** The scripts still point to `C:/Users/user/...`. This works on *your* machine. It will fail on the CI/CD pipeline or another researcher's laptop.
+*   **Hardcoded Paths:** The scripts still point to `<user-home>/...`. This works on *your* machine. It will fail on the CI/CD pipeline or another researcher's laptop.
 *   **Output Overwrite Risk:** The scripts overwrite the CSVs silently. In a production audit trail, we need versioning or a "Run Log."
 
 ### 🛠️ Required Fix
