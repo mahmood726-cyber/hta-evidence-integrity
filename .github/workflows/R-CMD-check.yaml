@@ -42,7 +42,11 @@ jobs:
           extra-packages: |
             any::rcmdcheck
             any::testthat
+            any::roxygen2
           needs: check
+
+      - name: Generate documentation from roxygen comments
+        run: Rscript -e 'roxygen2::roxygenise()'
 
       - uses: r-lib/actions/check-r-package@v2
         with:

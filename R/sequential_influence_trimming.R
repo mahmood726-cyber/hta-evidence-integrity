@@ -26,8 +26,8 @@
 #'   sequential_influence_trimming(dat$yi, dat$vi)
 #' }
 #'
-#' @importFrom metafor rma influence
-#' @importFrom stats qnorm
+#' @importFrom metafor rma
+#' @importFrom stats qnorm influence
 #' @export
 sequential_influence_trimming <- function(yi, vi, influence_threshold = 0.5,
                                           max_iterations = 5,
@@ -63,7 +63,7 @@ sequential_influence_trimming <- function(yi, vi, influence_threshold = 0.5,
     estimate_current <- fit$beta[1]
     estimate_history <- c(estimate_history, estimate_current)
 
-    inf <- metafor::influence(fit)
+    inf <- stats::influence(fit)
     cooks_d <- inf$inf$cook.d
     cooks_d[is.na(cooks_d)] <- 0
     influence_history[[iteration]] <- cooks_d
