@@ -1,14 +1,13 @@
 skip_if_not_installed("metafor")
 
 make_data <- function() {
-  dat.bcg <- NULL  # silence R CMD check on global binding
-  utils::data("dat.bcg", package = "metafor", envir = environment())
-  dat <- metafor::escalc(
-    measure = "RR",
-    ai = tpos, bi = tneg, ci = cpos, di = cneg,
-    data = dat.bcg
-  )
-  list(yi = as.numeric(dat$yi), vi = as.numeric(dat$vi))
+  set.seed(42)
+  k <- 12
+  mu <- 0.30
+  tau <- 0.15
+  vi <- runif(k, min = 0.02, max = 0.20)
+  yi <- mu + rnorm(k, sd = tau) + rnorm(k, sd = sqrt(vi))
+  list(yi = yi, vi = vi)
 }
 
 test_that("mafi_weighted_ma returns a finite estimate and a valid CI", {
