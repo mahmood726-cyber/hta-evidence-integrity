@@ -1,6 +1,46 @@
+# Python
 __pycache__/
 *.pyc
+*.pyo
+.venv/
+venv/
+
+# R
 *.Rhistory
 .RData
-*.docx
+.Rapp.history
+.Rproj.user/
+*.Rproj
+Rplots.pdf
+.Renviron
+.Rprofile.user
+
+# R package build artefacts
+*.tar.gz
+*.Rcheck/
+src/*.o
+src/*.so
+src/*.dll
+
+# Editors / OS
 .DS_Store
+.vscode/
+.idea/
+*.swp
+*~
+
+# Office
+*.docx
+*.xlsx~
+~$*
+
+# Project-specific outputs (regenerable)
+analysis/output/
+analysis/comparison_output/
+analysis/heterogeneity_output/
+analysis/research_output/
+analysis/results/
+analysis/plots/
+analysis/simulation/output/
+analysis/transportability/output/
+*.rds

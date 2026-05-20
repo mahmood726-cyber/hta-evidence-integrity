@@ -1,11 +1,37 @@
-# Pairwise70: Comprehensive Cochrane Pairwise Meta-Analysis Dataset
+# Pairwise70: Advanced Pooling Methods for Pairwise Meta-Analysis
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![R Version](https://img.shields.io/badge/R-%3E%3D%204.0.0-blue.svg)](https://www.r-project.org/)
+[![R-CMD-check](https://github.com/mahmood726-cyber/hta-evidence-integrity/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mahmood726-cyber/hta-evidence-integrity/actions/workflows/R-CMD-check.yaml)
+
+## Repository layout
+
+This repository contains:
+
+- **`R/`** — the `Pairwise70` R package source: six advanced pooling
+  estimators (`mafi_weighted_ma`, `adaptive_robust_pooling`,
+  `sequential_influence_trimming`, `unified_bias_stability`,
+  `ensemble_meta_analysis`, `compare_pooling_methods`).
+- **`tests/testthat/`** — `testthat` unit tests for the package and for the
+  HTA evidence-integrity heuristics (OIS, GRADE mapping, evidence
+  classification).
+- **`analysis/`** — research scripts, simulation pipelines, and reports that
+  produced the methods. Not part of the package build.
+- **`submissions/`** — F1000, PLOS ONE, RSM and E156 manuscript drafts,
+  reviews and audit notes. Not part of the package build.
+- **`e156-submission/`**, **`f1000_artifacts/`**, **`docs/`** — venue-specific
+  artefacts and the GitHub Pages site.
+
+The companion **Pairwise70 dataset package** (501 Cochrane meta-analysis
+datasets) lives at <https://github.com/mahmood789/Pairwise70>; the pooling
+methods here were developed against it.
 
 ## Overview
 
-**Pairwise70** is an R data package containing **501 systematically extracted pairwise meta-analysis datasets** from Cochrane Systematic Reviews. This comprehensive collection provides ready-to-use, cleaned datasets for meta-research, methodological studies, and educational purposes.
+**Pairwise70** (this repository) provides a small family of robust pooling
+estimators developed against the Pairwise70 collection of Cochrane pairwise
+meta-analyses, intended to complement standard random-effects meta-analysis
+with stability-aware, influence-aware, and bias-corrected variants.
 
 ## Key Features
 
