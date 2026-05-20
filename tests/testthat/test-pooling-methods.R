@@ -1,10 +1,12 @@
 skip_if_not_installed("metafor")
 
 make_data <- function() {
+  dat.bcg <- NULL  # silence R CMD check on global binding
+  utils::data("dat.bcg", package = "metafor", envir = environment())
   dat <- metafor::escalc(
     measure = "RR",
     ai = tpos, bi = tneg, ci = cpos, di = cneg,
-    data = metafor::dat.bcg
+    data = dat.bcg
   )
   list(yi = as.numeric(dat$yi), vi = as.numeric(dat$vi))
 }
