@@ -19,3 +19,8 @@
 ^metadata_requirements\.txt$
 ^push\.sh$
 ^cran-comments\.md$
+^CITATION\.cff$
+^CONTRIBUTING\.md$
+^LICENSE\.md$
+^\.zenodo\.json$
+^tests/verify_manuscript_numbers\.py$
