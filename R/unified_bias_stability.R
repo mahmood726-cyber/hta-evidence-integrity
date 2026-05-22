@@ -19,11 +19,11 @@
 #'   the SE inflation factor.
 #'
 #' @examples
-#' \dontrun{
-#'   dat <- metafor::escalc(measure = "RR", ai = tpos, bi = tneg,
-#'                          ci = cpos, di = cneg, data = metafor::dat.bcg)
-#'   unified_bias_stability(dat$yi, dat$vi)
-#' }
+#' set.seed(1)
+#' k  <- 10
+#' yi <- 0.3 + rnorm(k, sd = 0.15) + rnorm(k, sd = 0.20)
+#' vi <- runif(k, 0.02, 0.20)
+#' unified_bias_stability(yi, vi)
 #'
 #' @importFrom metafor rma regtest trimfill leave1out
 #' @importFrom stats qnorm pnorm median

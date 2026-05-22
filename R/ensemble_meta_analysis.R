@@ -16,11 +16,11 @@
 #'   method estimates and weights, and within/between variance components.
 #'
 #' @examples
-#' \dontrun{
-#'   dat <- metafor::escalc(measure = "RR", ai = tpos, bi = tneg,
-#'                          ci = cpos, di = cneg, data = metafor::dat.bcg)
-#'   ensemble_meta_analysis(dat$yi, dat$vi)
-#' }
+#' set.seed(1)
+#' k  <- 10
+#' yi <- 0.3 + rnorm(k, sd = 0.15) + rnorm(k, sd = 0.20)
+#' vi <- runif(k, 0.02, 0.20)
+#' ensemble_meta_analysis(yi, vi, include_rve = FALSE)
 #'
 #' @importFrom metafor rma
 #' @importFrom stats qnorm pnorm sd

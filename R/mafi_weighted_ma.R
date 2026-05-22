@@ -19,11 +19,11 @@
 #'   adjustment relative to the base REML estimate.
 #'
 #' @examples
-#' \dontrun{
-#'   dat <- metafor::escalc(measure = "RR", ai = tpos, bi = tneg,
-#'                          ci = cpos, di = cneg, data = metafor::dat.bcg)
-#'   mafi_weighted_ma(dat$yi, dat$vi)
-#' }
+#' set.seed(1)
+#' k  <- 10
+#' yi <- 0.3 + rnorm(k, sd = 0.15) + rnorm(k, sd = 0.20)
+#' vi <- runif(k, 0.02, 0.20)
+#' mafi_weighted_ma(yi, vi)
 #'
 #' @importFrom metafor rma leave1out
 #' @importFrom stats qnorm pnorm

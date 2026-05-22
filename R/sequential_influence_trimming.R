@@ -20,11 +20,11 @@
 #'   studies, final per-study weights, and the estimate trajectory.
 #'
 #' @examples
-#' \dontrun{
-#'   dat <- metafor::escalc(measure = "RR", ai = tpos, bi = tneg,
-#'                          ci = cpos, di = cneg, data = metafor::dat.bcg)
-#'   sequential_influence_trimming(dat$yi, dat$vi)
-#' }
+#' set.seed(1)
+#' k  <- 10
+#' yi <- 0.3 + rnorm(k, sd = 0.15) + rnorm(k, sd = 0.20)
+#' vi <- runif(k, 0.02, 0.20)
+#' sequential_influence_trimming(yi, vi)
 #'
 #' @importFrom metafor rma
 #' @importFrom stats qnorm influence

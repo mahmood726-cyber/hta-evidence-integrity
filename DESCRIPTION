@@ -20,7 +20,8 @@ Encoding: UTF-8
 LazyData: true
 Depends: R (>= 4.0.0)
 Imports: metafor, stats
-Suggests: testthat (>= 3.0.0), clubSandwich, RoBMA
+Suggests: testthat (>= 3.0.0), clubSandwich, RoBMA, knitr, rmarkdown
+VignetteBuilder: knitr
 Config/testthat/edition: 3
 RoxygenNote: 7.3.3
 URL: https://github.com/mahmood789/Pairwise70
