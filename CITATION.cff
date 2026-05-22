@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+title: "Pairwise70: Advanced Pooling Methods for Pairwise Meta-Analysis"
+message: >-
+  If you use this software, please cite it using the metadata from this
+  file.
+type: software
+authors:
+  - given-names: Mahmood
+    family-names: Arai
+    email: mahmood726@gmail.com
+repository-code: "https://github.com/mahmood726-cyber/hta-evidence-integrity"
+url: "https://github.com/mahmood726-cyber/hta-evidence-integrity"
+abstract: >-
+  An R package of six advanced pooling estimators developed against the
+  Pairwise70 collection of pairwise meta-analysis datasets extracted from
+  Cochrane systematic reviews. Provides MAFI-weighted pooling
+  (stability + precision), adaptive robust pooling
+  (heterogeneity-driven multi-estimator weighting), sequential influence
+  trimming, a unified bias-stability framework that combines trim-and-fill
+  with leave-one-out diagnostics, an ensemble that averages the above, and a
+  side-by-side comparison helper. Intended for meta-research, methodological
+  studies, and software validation in meta-analysis.
+keywords:
+  - meta-analysis
+  - pooling
+  - random-effects
+  - publication-bias
+  - stability
+  - Cochrane
+  - R
+license: MIT
+version: 2.0.0
+date-released: "2026-01-15"

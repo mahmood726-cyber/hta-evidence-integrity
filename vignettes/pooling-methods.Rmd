@@ -1,0 +1,160 @@
+---
+title: "Pooling methods in Pairwise70"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Pooling methods in Pairwise70}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = "center"
+)
+set.seed(42)
+```
+
+## Why another pooling estimator?
+
+Standard random-effects meta-analysis assigns each study a weight
+proportional to `1 / (vi + tau^2)`. That is optimal under the standard
+assumptions but it doesn't ask the question that matters most for a clinical
+reader: *if I removed one study, would my conclusion change?* Two studies
+can have identical sampling variance but very different leverage on the
+direction or significance of the pooled estimate.
+
+`Pairwise70` provides six estimators that complement `metafor::rma()` by
+asking variants of that question.
+
+## A working dataset
+
+```{r setup}
+library(Pairwise70)
+
+set.seed(42)
+k <- 12
+yi <- 0.30 + rnorm(k, sd = 0.15) + rnorm(k, sd = 0.20)
+vi <- runif(k, 0.02, 0.20)
+```
+
+This is a small synthetic dataset on the log-effect-size scale (`k = 12`,
+between-study SD `tau = 0.15`, varying sampling variances). It is large
+enough that every method has something to do.
+
+## A side-by-side comparison
+
+`compare_pooling_methods()` runs the standard REML model, HKSJ, RVE (if
+`clubSandwich` is installed) and each advanced method on the same data, so
+you can read off how much each contributes:
+
+```{r compare}
+compare_pooling_methods(yi, vi)
+```
+
+If `RoBMA` is installed and you have time to wait, pass `include_robma =
+TRUE` to add a Bayesian model-averaged row.
+
+## MAFI-weighted meta-analysis (MWM)
+
+MWM blends inverse-variance weights with leave-one-out *stability* weights.
+A study whose removal would flip the direction or significance of the
+pooled estimate gets a smaller stability weight, so it pulls the pooled
+estimate less than a study that only adds precision.
+
+```{r mwm}
+mwm <- mafi_weighted_ma(yi, vi)
+mwm$estimate
+mwm$adjustment              # shift relative to REML
+mwm$study_stability_scores  # per study; 1.0 = perfectly stable
+```
+
+The mixing constant is exposed as `stability_weight`. Setting it to `0`
+recovers a precision-only estimator; `1` recovers a stability-only one.
+
+## Adaptive robust pooling (ARP)
+
+ARP fits the model with four estimators (REML, DL, PM, HKSJ) and combines
+them with weights that depend on observed `I^2` and `k`. The standard error
+includes a between-estimator term, so model uncertainty is reflected in the
+CI.
+
+```{r arp}
+arp <- adaptive_robust_pooling(yi, vi)
+arp$estimator_weights
+arp$var_within     # average within-estimator variance
+arp$var_between    # disagreement across estimators
+```
+
+The relative magnitudes of `var_within` and `var_between` tell you how much
+of the uncertainty is from sampling vs. from not knowing which estimator
+to trust.
+
+## Sequential influence trimming (SIT)
+
+SIT computes Cook's distance for each study, downweights any study above
+threshold by `trim_factor`, refits, and repeats. The procedure converges
+when influence drops below threshold or the pooled estimate stops moving.
+
+```{r sit}
+sit <- sequential_influence_trimming(yi, vi, influence_threshold = 0.5)
+sit$iterations
+sit$n_trimmed
+sit$estimate_history       # trajectory across iterations
+```
+
+Unlike trim-and-fill, no studies are removed — weights only shrink — and
+the final weights are part of the return value so the trimming is fully
+auditable.
+
+## Unified bias-stability framework (UBSF)
+
+UBSF combines a *bias* adjustment (trim-and-fill plus an Egger flag) with a
+*stability* adjustment (shrink toward the leave-one-out median) and inflates
+the standard error when fragility is detected.
+
+```{r ubsf}
+ubsf <- unified_bias_stability(yi, vi)
+ubsf$bias_detected
+ubsf$direction_fragile
+ubsf$se_inflation
+ubsf$bias_adjustment
+ubsf$stability_adjustment
+```
+
+`bias_weight` and `stability_weight` control how aggressive the two
+adjustments are.
+
+## Ensemble (EMA)
+
+`ensemble_meta_analysis()` averages REML, MWM, ARP, SIT and UBSF (and
+optionally RVE and RoBMA) with fixed weights, and reports both
+within-method variance and between-method variance:
+
+```{r ema}
+ema <- ensemble_meta_analysis(yi, vi, include_rve = FALSE)
+ema$method_weights
+ema$agreement   # 1 - sd(estimates) / |ensemble estimate|
+```
+
+`agreement` is a useful one-glance check: high agreement means every method
+points the same direction with similar magnitude; low agreement means the
+choice of method materially changes the answer, which is itself a finding.
+
+## When to reach for which
+
+| Question | Try |
+| --- | --- |
+| "Is one study driving the conclusion?" | `mafi_weighted_ma()`, `sequential_influence_trimming()` |
+| "Does my answer depend on which heterogeneity estimator I picked?" | `adaptive_robust_pooling()` |
+| "Is there evidence of publication bias *and* fragility?" | `unified_bias_stability()` |
+| "Reviewer asked for a sensitivity table" | `compare_pooling_methods()` |
+| "I want one number that hedges across all of the above" | `ensemble_meta_analysis()` |
+
+## Further reading
+
+- The `analysis/` directory of this repository contains the full simulation
+  and validation pipelines the methods were developed under.
+- See `NEWS.md` for changes between releases and `CONTRIBUTING.md` for how
+  to add a new method.

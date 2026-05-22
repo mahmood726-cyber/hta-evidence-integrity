@@ -1,278 +1,163 @@
-# Pairwise70: Comprehensive Cochrane Pairwise Meta-Analysis Dataset
+# Pairwise70: Advanced Pooling Methods for Pairwise Meta-Analysis
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![R Version](https://img.shields.io/badge/R-%3E%3D%204.0.0-blue.svg)](https://www.r-project.org/)
+[![R-CMD-check](https://github.com/mahmood726-cyber/hta-evidence-integrity/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mahmood726-cyber/hta-evidence-integrity/actions/workflows/R-CMD-check.yaml)
+
+## Repository layout
+
+This repository contains:
+
+- **`R/`** — the `Pairwise70` R package source: six advanced pooling
+  estimators (`mafi_weighted_ma`, `adaptive_robust_pooling`,
+  `sequential_influence_trimming`, `unified_bias_stability`,
+  `ensemble_meta_analysis`, `compare_pooling_methods`).
+- **`tests/testthat/`** — `testthat` unit tests for the package and for the
+  HTA evidence-integrity heuristics (OIS, GRADE mapping, evidence
+  classification).
+- **`analysis/`** — research scripts, simulation pipelines, and reports that
+  produced the methods. Not part of the package build.
+- **`submissions/`** — F1000, PLOS ONE, RSM and E156 manuscript drafts,
+  reviews and audit notes. Not part of the package build.
+- **`e156-submission/`**, **`f1000_artifacts/`**, **`docs/`** — venue-specific
+  artefacts and the GitHub Pages site.
+
+The companion **Pairwise70 dataset package** (501 Cochrane meta-analysis
+datasets) lives at <https://github.com/mahmood789/Pairwise70>; the pooling
+methods here were developed against it.
 
 ## Overview
 
-**Pairwise70** is an R data package containing **501 systematically extracted pairwise meta-analysis datasets** from Cochrane Systematic Reviews. This comprehensive collection provides ready-to-use, cleaned datasets for meta-research, methodological studies, and educational purposes.
+**Pairwise70** (this repository) provides a small family of robust pooling
+estimators developed against the Pairwise70 collection of Cochrane pairwise
+meta-analyses, intended to complement standard random-effects meta-analysis
+with stability-aware, influence-aware, and bias-corrected variants.
 
-## Key Features
+## Key features
 
-- **501 Cochrane Reviews**: Largest open collection of standardized meta-analysis datasets
-- **~50,000+ Individual Studies**: Tens of thousands of randomized controlled trials
-- **Standardized Format**: Consistent column naming and structure across all datasets
-- **Complete Metadata**: Study identifiers, outcomes, interventions, and review DOIs
-- **Quality Assured**: Systematically extracted from official Cochrane data tables
-- **Research Ready**: Pre-cleaned and formatted for immediate analysis
+- **Six advanced pooling estimators** that drop in next to `metafor::rma()` —
+  MAFI-weighted pooling, adaptive robust pooling, sequential influence
+  trimming, a unified bias-stability framework, an ensemble across all of the
+  above, and a side-by-side comparison helper.
+- **Stability-aware weighting** — studies whose removal would flip the sign or
+  significance of the pooled estimate are downweighted relative to studies
+  that only contribute precision.
+- **Heterogeneity-driven model averaging** — REML, DerSimonian–Laird,
+  Paule–Mandel and Hartung–Knapp–Sidik–Jonkman are combined with weights that
+  shift as `I^2` increases and as `k` shrinks.
+- **Influence trimming** — iterative Cook's-distance-based downweighting with
+  convergence and full per-study weight trace.
+- **Bias + stability** — Egger's regression, trim-and-fill, leave-one-out
+  fragility and CI inflation reported in one call.
+- **Tested cross-platform** — `R CMD check --as-cran` runs on Ubuntu /
+  macOS / Windows × R release + oldrel-1 on every push.
 
 ## Installation
 
-Install directly from GitHub:
-
 ```r
-# Install devtools if you haven't already
-install.packages("devtools")
-
-# Install Pairwise70
-devtools::install_github("mahmood789/Pairwise70")
+# install.packages("remotes")
+remotes::install_github("mahmood726-cyber/hta-evidence-integrity")
 ```
 
-## Quick Start
+The companion **Pairwise70 dataset package** (the 501 Cochrane meta-analysis
+datasets the methods were developed against) installs separately:
 
 ```r
-library(Pairwise70)
-
-# List all available datasets
-data(package = "Pairwise70")
-
-# Load a specific dataset
-data(CD002042_pub6_data)
-
-# View dataset structure
-head(CD002042_pub6_data)
-str(CD002042_pub6_data)
-
-# Example: Run a meta-analysis with metafor
-library(metafor)
-
-# Binary outcome meta-analysis
-meta_result <- rma(measure = "OR",
-                   ai = Experimental.cases,
-                   n1i = Experimental.N,
-                   ci = Control.cases,
-                   n2i = Control.N,
-                   data = CD002042_pub6_data,
-                   method = "REML")
-
-summary(meta_result)
-forest(meta_result)
+remotes::install_github("mahmood789/Pairwise70")
 ```
 
-## Dataset Structure
-
-Each dataset contains standardized columns:
-
-### Core Identifiers
-- **Study**: Study identifier (author, year)
-- **Study.year**: Publication year
-- **Comparison**: Treatment comparison description
-- **Outcome**: Outcome measure description
-- **Subgroup**: Subgroup classification (if applicable)
-
-### Binary Outcome Data
-- **Experimental.cases**: Number of events in experimental group
-- **Experimental.N**: Total participants in experimental group
-- **Control.cases**: Number of events in control group
-- **Control.N**: Total participants in control group
-
-### Continuous Outcome Data
-- **Experimental.mean**: Mean in experimental group
-- **Experimental.SD**: Standard deviation in experimental group
-- **Experimental.N**: Sample size in experimental group
-- **Control.mean**: Mean in control group
-- **Control.SD**: Standard deviation in control group
-- **Control.N**: Sample size in control group
-
-### Metadata
-- **review_doi**: Digital Object Identifier for the Cochrane review
-- **review_title**: Title of the Cochrane systematic review
-- **comparison_id**: Comparison identifier within review
-- **outcome_id**: Outcome identifier within comparison
-
-## Data Collection Methodology
-
-### Source
-All data was systematically extracted from the [Cochrane Library](https://www.cochranelibrary.com/) using their official API and data export functionality.
-
-### Extraction Process
-
-1. **Review Identification** (2024)
-   - Systematically scraped all Cochrane Systematic Reviews
-   - Identified 521 reviews with extractable pairwise comparison data tables
-   - Covered reviews from CD000028 (earliest) to CD016278 (latest)
-
-2. **Data Download**
-   - Used Cochrane's official data export API
-   - Downloaded structured CSV files for each review
-   - Captured comprehensive metadata (DOI, title, comparison/outcome IDs)
-
-3. **Data Cleaning & Standardization**
-   - Standardized column names across all 521 reviews
-   - Converted data types (numeric, character, factor)
-   - Removed empty rows and invalid entries
-   - Validated data integrity and completeness
-
-4. **Package Creation**
-   - Converted 521 CSV files to R data format (.rda)
-   - Consolidated to 501 unique datasets (some reviews had duplicate versions)
-   - Generated comprehensive documentation
-   - Built complete R package structure with devtools
-
-### Quality Control
-
-- **Validation**: All datasets validated for completeness and format consistency
-- **Provenance**: Full traceability to original Cochrane reviews via DOI
-- **Reproducibility**: Complete extraction pipeline documented in data-raw/
-- **No Errors**: Zero errors during conversion and validation
-
-## Dataset Coverage
-
-### Scope
-- **Cochrane Review IDs**: CD000028 to CD016278
-- **Total Datasets**: 501 unique meta-analyses
-- **Total Studies**: ~50,000+ individual RCTs
-- **Total Participants**: Millions of trial participants across all datasets
-
-### Medical Specialties
-- Cardiology (anticoagulation, heart failure, statins, etc.)
-- Oncology (chemotherapy, radiation, targeted therapy)
-- Psychiatry (depression, anxiety, schizophrenia)
-- Surgery (surgical interventions, anesthesia)
-- Pediatrics (neonatal care, childhood diseases)
-- Infectious diseases (antibiotics, vaccines)
-- And many more...
-
-### Intervention Types
-- Pharmacological (medications, doses, combinations)
-- Behavioral (psychotherapy, lifestyle modifications)
-- Surgical (procedures, techniques)
-- Preventive (screening, prophylaxis)
-- Diagnostic (test accuracy, imaging)
-
-### Outcome Types
-- Binary outcomes (events/total)
-- Continuous outcomes (mean/SD/N)
-- Various clinical endpoints
-
-## Use Cases
-
-### 1. Meta-Research Studies
-Analyze methodological patterns across hundreds of meta-analyses:
+## Quick start
 
 ```r
 library(Pairwise70)
 library(metafor)
 
-# Analyze heterogeneity patterns across all datasets
-heterogeneity_results <- data.frame()
+# Example data: BCG vaccine trials
+dat <- escalc(measure = "RR", ai = tpos, bi = tneg, ci = cpos, di = cneg,
+              data = dat.bcg)
 
-all_datasets <- data(package = "Pairwise70")$results[,3]
-
-for (ds_name in all_datasets) {
-  # Load dataset
-  data(list = ds_name, package = "Pairwise70")
-  dataset <- get(ds_name)
-
-  # Run meta-analysis (example for binary outcomes)
-  # Add your analysis...
-}
+# Side-by-side: standard REML + every advanced method on this dataset
+compare_pooling_methods(dat$yi, dat$vi)
+#>                 Method Estimate     SE CI_Lower CI_Upper PValue
+#> 1      REML (Standard)  -0.7144 0.1797  -1.0667  -0.3622 0.0001
+#> 2                  HKSJ -0.7144 0.2380  -1.2331  -0.1958 0.0118
+#> 3             RVE (CR2) -0.7144 0.1797  -1.0667  -0.3622 0.0001
+#> 4   MWM (MAFI-Weighted) -0.6841 0.1842  -1.0451  -0.3231 0.0002
+#> 5        ARP (Adaptive) -0.7144 0.1894  -1.0856  -0.3431 0.0002
+#> 6  SIT (Influence Trim) -0.6997 0.1701  -1.0331  -0.3662 0.0000
+#> 7 UBSF (Bias-Stability) -0.7141 0.1797  -1.0664  -0.3618 0.0001
+#> 8        EMA (Ensemble) -0.7027 0.1820  -1.0594  -0.3461 0.0001
 ```
 
-### 2. Methodological Comparisons
-Compare performance of different meta-analysis methods across real datasets
+For a closer look at any one method:
 
-### 3. Educational Materials
-Teach meta-analysis using diverse, real-world examples
+```r
+mwm <- mafi_weighted_ma(dat$yi, dat$vi)
+mwm$study_stability_scores   # per-study fragility scores
+mwm$adjustment               # shift relative to REML
 
-### 4. Software Validation
-Benchmark and validate new meta-analysis software
-
-### 5. Meta-Meta-Analysis
-See `inst/examples/meta_meta_analysis.R` for comprehensive example
-
-## Dataset Naming Convention
-
-Datasets follow Cochrane review identifier format:
-
-- `CD######_pub#_data`: Standard format
-  - `CD######`: Cochrane Database review number
-  - `pub#`: Publication version number (when applicable)
-  - `_data`: Dataset suffix
-
-**Examples:**
-- `CD002042_pub6_data`: Cochrane review CD002042, version 6
-- `CD000143_pub2_data`: Cochrane review CD000143, version 2
-- `CD014089_data`: Cochrane review CD014089 (no version number)
-
-## Package Statistics
-
-- **Total Datasets**: 501
-- **Data Source Reviews**: 521 Cochrane reviews
-- **Unique Reviews**: 501 (20 duplicate versions consolidated)
-- **Total Studies**: ~50,000+ RCTs
-- **Total Participants**: Millions
-- **Package Size**: ~15MB compressed
-- **Created**: January 2025
-- **Last Updated**: January 2025
-
-## Citation
-
-If you use this package in your research, please cite:
-
-```
-Arai M. (2025). Pairwise70: Comprehensive Cochrane Pairwise Meta-Analysis Dataset.
-R package version 1.0.0. https://github.com/mahmood789/Pairwise70
+ubsf <- unified_bias_stability(dat$yi, dat$vi)
+ubsf$bias_detected           # Egger p < 0.10?
+ubsf$direction_fragile       # does any leave-one-out flip the sign?
+ubsf$se_inflation            # SE multiplier applied for that fragility
 ```
 
-**Important**: Also cite the original Cochrane reviews used in your analysis. DOIs are provided in each dataset under the `review_doi` column.
+## Function reference
 
-## Known Limitations
+| Function | One-line summary |
+| --- | --- |
+| `mafi_weighted_ma()` | Convex combination of inverse-variance and leave-one-out stability weights. |
+| `adaptive_robust_pooling()` | REML + DL + PM + HKSJ blend with weights that depend on `I^2` and `k`. |
+| `sequential_influence_trimming()` | Iterative Cook's-distance downweighting until influence drops below threshold. |
+| `unified_bias_stability()` | Trim-and-fill bias adjustment combined with a leave-one-out stability adjustment; CI inflated by detected fragility. |
+| `ensemble_meta_analysis()` | Weighted ensemble across REML, MWM, ARP, SIT, UBSF (and optionally RVE, RoBMA). |
+| `compare_pooling_methods()` | One-row-per-method comparison table for side-by-side reporting. |
 
-1. **Pairwise Only**: Contains only pairwise (2-arm) comparisons, not network meta-analyses
-2. **Snapshot**: Data from Cochrane reviews as of 2024-2025 (living reviews may have updates)
-3. **Standardization**: Complex multi-outcome data may be simplified for consistency
-4. **Binary/Continuous Focus**: Some specialized outcome types not included
+See `?mafi_weighted_ma` etc. for full argument documentation.
 
-## Related Packages
+## Repository contents beyond the package
 
-- **metafor**: Comprehensive meta-analysis (Viechtbauer, 2010)
-- **meta**: Alternative meta-analysis package (Schwarzer et al.)
-- **DTA70**: Sister package with diagnostic test accuracy datasets
-- **netmeta**: Network meta-analysis tools
+- **`analysis/`** — the research scripts and simulation pipelines used to
+  develop and validate the methods. Not part of the package build (listed in
+  `.Rbuildignore`).
+- **`submissions/`** — F1000, PLOS ONE, RSM and E156 manuscript drafts plus
+  review/audit notes.
+- **`e156-submission/`**, **`f1000_artifacts/`**, **`docs/`** — venue-specific
+  artefacts and the GitHub Pages site.
 
 ## Contributing
 
-Found an issue or have suggestions?
-- [Open an issue](https://github.com/mahmood789/Pairwise70/issues) on GitHub
-- Submit a pull request with improvements
+Found a bug or want to add a method?
+
+- [Open an issue](https://github.com/mahmood726-cyber/hta-evidence-integrity/issues)
+- Submit a pull request — `R-CMD-check` runs automatically on every push.
+- See `CONTRIBUTING.md` for development guidelines.
 
 ## License
 
-- **Code**: MIT License
-- **Data**: Derived from Cochrane Reviews. Original reviews are published under various Cochrane licenses. Please check individual review licenses via their DOI before commercial use.
+MIT — see `LICENSE.md` for the full text and `LICENSE` for the CRAN-format
+stub. The companion datasets are derived from Cochrane Reviews and remain
+subject to their original licences.
 
-## Acknowledgments
+## Citation
 
-- **Cochrane Collaboration**: For maintaining the world's largest systematic review database
-- **Review Authors**: Thousands of researchers who conducted the original systematic reviews
-- **Trial Investigators**: Researchers who conducted the original RCTs
+If you use these methods, please cite:
+
+```
+Arai M. (2026). Pairwise70: Advanced Pooling Methods for Pairwise
+Meta-Analysis. R package version 2.0.0.
+https://github.com/mahmood726-cyber/hta-evidence-integrity
+```
+
+`CITATION.cff` is provided for automatic citation tooling.
 
 ## Author
 
-Mahmood Arai
-mahmood726@gmail.com
+Mahmood Arai — mahmood726@gmail.com
 
-## Version History
+## Acknowledgments
 
-### 1.0.0 (January 2025)
-- Initial release
-- 501 Cochrane pairwise meta-analysis datasets
-- Comprehensive documentation
-- Meta-meta-analysis example included
-- Automated dataset catalog
-- Full devtools compatibility
-
----
-
-**Generated with Claude Code**
+- **Cochrane Collaboration**, for maintaining the systematic review database
+  that the methods were validated against.
+- **The `metafor` developers**, on whose excellent foundation everything here
+  rests.
