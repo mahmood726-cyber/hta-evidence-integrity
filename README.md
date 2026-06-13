@@ -1,15 +1,15 @@
-# Pairwise70: Comprehensive Cochrane Pairwise Meta-Analysis Dataset
+# Pairwise70: Cochrane Pairwise Meta-Analysis Dataset
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![R Version](https://img.shields.io/badge/R-%3E%3D%204.0.0-blue.svg)](https://www.r-project.org/)
 
 ## Overview
 
-**Pairwise70** is an R data package containing **501 systematically extracted pairwise meta-analysis datasets** from Cochrane Systematic Reviews. This comprehensive collection provides ready-to-use, cleaned datasets for meta-research, methodological studies, and educational purposes.
+**Pairwise70** is an R data package containing **501 systematically extracted pairwise meta-analysis datasets** from Cochrane Systematic Reviews. This collection provides ready-to-use, cleaned datasets for meta-research, methodological studies, and educational purposes.
 
 ## Key Features
 
-- **501 Cochrane Reviews**: Largest open collection of standardized meta-analysis datasets
+- **501 Cochrane Reviews**: Standardized meta-analysis datasets in a single open collection
 - **~50,000+ Individual Studies**: Tens of thousands of randomized controlled trials
 - **Standardized Format**: Consistent column naming and structure across all datasets
 - **Complete Metadata**: Study identifiers, outcomes, interventions, and review DOIs
